@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>360全景图片</title>
+    <style>
+        /*清除浏览器默认样式*/
+        *{
+            margin: 0;
+            padding: 0;
+
+        }
+        body{
+            overflow: hidden;
+        }
+        #car{
+            width: 100%;
+
+        }
+    </style>
+</head>
+<body>
+   <img  id="car"  src="img/car/0.jpg">
+<script type="text/javascript">
+    var CurrentImagIndex = 0;//定义当前图片索引
+    var ImagArray = [];//定义数组存放加载的图片
+    for(var i =0;i<60;i++)
+    {
+        var newIamg = new Image();
+        newIamg.src = "img/car/"+i+".jpg";
+        ImagArray.push(newIamg);
+    }
+    var carImag = document.getElementById("car");
+    //鼠标按下事件
+    document.onmousedown = function (event) {
+        var dis =0; //距离初值
+        //获取鼠标水平坐标
+        var begin = event.clientX;
+        // console.log(begin);
+        //鼠标移动事件
+        document.onmousemove = function (event) {
+            //获取移动时的坐标
+            var current = event.clientX;
+            // console.log("begin="+begin+"current="+current);
+            dis = CurrentImagIndex + Math.floor((begin - current)/30);
+            dis= dis%60;
+            if(dis<0)
+            {
+                dis =dis+60;
+            }
+            carImag.src = "img/car/"+dis+".jpg";
+
+
+
+
+        };
+        //定义鼠标离开事件
+        document.onmouseup =  function (event) {
+            document.onmousemove = null;
+            document.onmouseup = null;
+
+            //当鼠标松开更新图片的索引
+            currentImgIndex = dis;
+
+        }
+
+        // 清除默认拖出样式
+        return false;
+
+
+
+
+    }
+
+
+</script>
+
+
+
+
+</body>
+</html>

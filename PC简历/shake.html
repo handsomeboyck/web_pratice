@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="./css/shake.css"/>
+	</head>
+	<body>
+		<div id="wrap">
+			<div class="hand"></div>
+			<div class="result">
+				<div class="avator"></div>
+				<div class="text">
+					 66666666<br />
+					 99999999
+				</div>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		window.onload=function(){
+			document.addEventListener("touchstart",function(ev){
+				ev = ev||event;
+				ev.preventDefault();
+			})
+			
+			
+			//重力感应事件
+			var i=0;
+			var lastTime =0;
+			var lastX ="first";
+			var isShake=false;
+			window.addEventListener("devicemotion",function(ev){
+				var nowTime = new Date().getTime();
+				
+				//将摇一摇主体逻辑的触发频率减了下来
+				if(nowTime - lastTime>200){
+					ev = ev||event;
+					var motion = ev.accelerationIncludingGravity;
+					var x = Math.round(motion.x);
+					if(getAdr()){
+						x=-x;
+					}
+					if(lastX==="first"){
+						lastX =x;
+						return;
+					}
+					/*1.用户摇动手机,是以一个方向为主的摇动。
+					2.用户摇动手机的时候,加速度肯定是有变化的。
+					3.设置一个阈值,当加速度的变化超过这个阈值时,就满足触发摇一摇的晃动幅度了。
+						但此时不能立即触发摇一摇,而得等用户晃动完停下的时候才触发摇一摇。*/
+					if(Math.abs(x - lastX)>30){
+						//该不该触发摇一摇？ 不该
+						isShake = true;
+					}
+					if(isShake&&Math.abs(x - lastX)<30){
+						//触发摇一摇
+						//让摇一摇的逻辑 在剧烈晃动后 用户停止摇动的时候再触发
+						//alert("摇一摇");
+						document.querySelector("#wrap .result").classList.add("show");
+						isShake = false;
+					}
+						
+					lastTime = 	nowTime;	
+					lastX = x;
+				}
+				
+				
+			})
+			
+			
+			function getAdr(){
+				var u = navigator.userAgent;
+				return u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; 
+			}
+		}
+	</script>
+</html>
